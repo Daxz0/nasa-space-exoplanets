@@ -1,11 +1,14 @@
-# source streamlitenv/bin/activate
 import streamlit as st
+from typing import Literal
+import numpy as np
+import pandas as pd
 
-st.set_page_config(page_title="Exoura", page_icon="🪐", layout="wide")
-st.subheader("A World Away: Hunting for Exoplanets with AI")
-st.write("""
-Welcome! This app teaches you the science of **transits** and **false positives**, 
-explains how our **AI vetter** works, and lets you **race the model** in a quick game.
-""")
+# WHAT IS AN EXOPLANET?
+# What is Transit photometry?
+# 
 
-# six seven
+dataframe_path = r'src/data/keplar.csv'
+
+df = pd.read_csv('src/data/keplar.csv')
+print(df)
+# st.dataframe(df)
