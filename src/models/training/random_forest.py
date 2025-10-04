@@ -21,7 +21,7 @@ X = X.fillna(X.mean())
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=5)
 
-rf_model = RandomForestClassifier(n_estimators=100, random_state=50, max_depth=5, min_samples_split=100, min_samples_leaf=1, max_features='sqrt')
+rf_model = RandomForestClassifier(n_estimators=100, random_state=48, max_depth=5, min_samples_split=15, min_samples_leaf=1, max_features='sqrt')
 rf_model.fit(X_train, y_train)
 
 y_pred = rf_model.predict(X_test)
