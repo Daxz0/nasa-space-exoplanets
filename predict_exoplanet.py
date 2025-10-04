@@ -1,10 +1,9 @@
 import joblib
 import numpy as np
+import pandas as pd
 
-# Load the trained model
-model = joblib.load('trained_exoplanet_model.joblib')
+model = joblib.load('src/models/trained_models/random_forest_model.joblib')
 
-# Feature names in order
 feature_names = [
     'koi_period',
     'koi_duration',
@@ -19,10 +18,17 @@ for feature in feature_names:
     value = float(input(f"{feature}: "))
     user_input.append(value)
 
-X_new = np.array(user_input).reshape(1, -1)
+X_new = pd.DataFrame([user_input], columns=feature_names)
 pred = model.predict(X_new)[0]
 
+proba = model.predict_proba(X_new)[0]
+
+confidence_intervals = {
+    'Class 0 (True Positive)': f"{proba[0] * 100:.2f}%",
+    'Class 1 (False Positive)': f"{proba[1] * 100:.2f}%"
+}
+
 if pred == 1:
-    print("Prediction: FALSE POSITIVE")
+    print(f"False Positive ({confidence_intervals['Class 1 (False Positive)']})")
 else:
-    print("Prediction: NOT FALSE POSITIVE")
+    print(f"True Positive ({confidence_intervals['Class 0 (True Positive)']})")
