@@ -2,7 +2,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-model = joblib.load('src/models/trained_models/random_forest_model.joblib')
+# model = joblib.load('src/models/trained_models/random_forest_model.joblib')
 
 feature_names = [
     'koi_period',

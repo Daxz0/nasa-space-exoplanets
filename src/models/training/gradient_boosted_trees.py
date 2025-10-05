@@ -9,8 +9,6 @@ from sklearn.metrics import classification_report, accuracy_score
 
 
 def get_project_paths():
-	"""Resolve project root and important file paths robustly regardless of CWD."""
-	# This file lives at src/models/training/gradient_boosted_trees.py
 	training_dir = os.path.dirname(os.path.abspath(__file__))
 	src_dir = os.path.dirname(os.path.dirname(training_dir))
 	project_root = os.path.dirname(src_dir)
@@ -24,7 +22,6 @@ def get_project_paths():
 def load_data(dataset_path: str):
 	df = pd.read_csv(dataset_path, comment='#')
 
-	# Keep a compact, high-signal set of features used elsewhere in the repo
 	feature_cols = [
 		'koi_period',
 		'koi_duration',
@@ -36,7 +33,6 @@ def load_data(dataset_path: str):
 	X = df[feature_cols]
 	y = df['koi_pdisposition']
 
-	# Basic numeric cleanup
 	X = X.apply(pd.to_numeric, errors='coerce')
 	X = X.fillna(X.mean(numeric_only=True))
 	return X, y, feature_cols
@@ -63,14 +59,13 @@ def train_and_evaluate(X, y):
 	print(f"Accuracy: {acc:.4f}")
 	print("\nClassification report:\n", classification_report(y_test, y_pred))
 
-	# Confusion matrix
-	unique_labels = y_test.unique()
-	cnf_matrix = confusion_matrix(y_test, y_pred, labels=unique_labels)
-	disp = ConfusionMatrixDisplay(confusion_matrix=cnf_matrix, display_labels=unique_labels)
+	labels_sorted = sorted(y_test.unique().tolist())
+	cnf_matrix = confusion_matrix(y_test, y_pred, labels=labels_sorted)
+	disp = ConfusionMatrixDisplay(confusion_matrix=cnf_matrix, display_labels=labels_sorted)
 	disp.plot(cmap='Blues')
 	plt.title('Gradient Boosted Trees - Confusion Matrix')
 
-	return gbt, acc, (y_test, y_pred)
+	return gbt, acc, (labels_sorted, cnf_matrix)
 
 
 def show_feature_importance(model, feature_names):
@@ -81,27 +76,26 @@ def show_feature_importance(model, feature_names):
 		print("\nFeature Importance:")
 		print(fi_sorted)
 
-		# Optional: quick bar plot
-		try:
-			fi_sorted.plot(kind='barh', x='Feature', y='Importance', legend=False, figsize=(8, 5))
-			plt.tight_layout()
-			plt.title('Feature Importance (GBTs)')
-		except Exception:
-			pass
-
-
 def main():
 	dataset_path, model_path = get_project_paths()
-	print(f"Using dataset: {dataset_path}")
-	print(f"Model will be saved to: {model_path}")
 
 	X, y, feature_names = load_data(dataset_path)
-	model, acc, _ = train_and_evaluate(X, y)
+	model, acc, (labels_sorted, cnf_matrix) = train_and_evaluate(X, y)
 	show_feature_importance(model, feature_names)
 
-	# Persist trained model
 	joblib.dump(model, model_path)
 	print(f"\nSaved Gradient Boosted Trees model to: {model_path}")
+
+	# Save confusion matrix as raw text (TSV)
+	models_dir = os.path.dirname(model_path)
+	cm_txt_path = os.path.join(models_dir, 'gradient_boosted_trees_confusion_matrix.txt')
+	labels = list(labels_sorted)
+	with open(cm_txt_path, 'w', encoding='utf-8') as f:
+		f.write('label\t' + '\t'.join(str(l) for l in labels) + '\n')
+		for i, lab in enumerate(labels):
+			row_vals = '\t'.join(str(int(v)) for v in cnf_matrix[i])
+			f.write(f"{lab}\t{row_vals}\n")
+	print(f"Saved Gradient Boosted Trees confusion matrix to: {cm_txt_path}")
 
 	plt.show()
 
