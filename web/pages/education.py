@@ -1,5 +1,5 @@
 # web/pages/education.py
-# Exoura — Education (Section 1 only) with Home/Demo/Results nav (copied from Home)
+# Exoura — Education (Section 1 only) with Home/Demo/methods nav (copied from Home)
 # - Nav copied 1:1 from Home, but "Education" button becomes "Home" -> home.py
 # - Section 1: "What is an exoplanet?" + exoplanet_rotation.gif
 # - Sections 2+ left as TODOs
@@ -83,7 +83,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------ HEADER (Home / Demo / Results) ------------------
+# ------------------ HEADER (Home / Demo / methods) ------------------
 with st.container():
     st.markdown('<div class="site-header">', unsafe_allow_html=True)
     left, right = st.columns([2,4], vertical_alignment="center")
@@ -94,22 +94,12 @@ with st.container():
     with right:
         st.markdown('<div class="nav">', unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
-        # NOTE: On Education we replace "Education" with "Home"
         if c1.button("Home", use_container_width=True):
-            try:
-                st.switch_page("home.py")
-            except Exception:
-                st.experimental_rerun()
+            st.switch_page("home.py")
         if c2.button("Demo", use_container_width=True):
-            try:
-                st.switch_page("pages/demo.py")
-            except Exception:
-                st.experimental_rerun()
-        if c3.button("Results", use_container_width=True):
-            try:
-                st.switch_page("pages/results.py")
-            except Exception:
-                st.experimental_rerun()
+            st.switch_page("demo.py")
+        if c3.button("Methods", use_container_width=True):
+            st.switch_page("methods.py")
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
