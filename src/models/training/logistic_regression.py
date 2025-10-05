@@ -57,3 +57,13 @@ intercept = log_reg_model.intercept_
 features = list(X.columns)
 
 print(f"Saved logistic regression model to: {lr_model_path}")
+
+cm_txt_path = out_dir / 'logistic_regression_confusion_matrix.txt'
+labels = list(unique_labels)
+with open(cm_txt_path, 'w', encoding='utf-8') as f:
+    f.write('label\t' + '\t'.join(str(l) for l in labels) + '\n')
+    for i, lab in enumerate(labels):
+        row_vals = '\t'.join(str(int(v)) for v in cnf_matrix[i])
+        f.write(f"{lab}\t{row_vals}\n")
+
+print(f"Saved logistic regression confusion matrix to: {cm_txt_path}")

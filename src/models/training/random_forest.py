@@ -51,6 +51,15 @@ joblib.dump(rf_model, model_path)
 
 fi_sorted = feature_importance.sort_values(by='Importance', ascending=False)
 
+cm_txt_path = out_dir / 'random_forest_confusion_matrix.txt'
+labels = list(unique_labels)
+with open(cm_txt_path, 'w', encoding='utf-8') as f:
+    f.write('label\t' + '\t'.join(str(l) for l in labels) + '\n')
+    for i, lab in enumerate(labels):
+        row_vals = '\t'.join(str(int(v)) for v in cnf_matrix[i])
+        f.write(f"{lab}\t{row_vals}\n")
+
 print(f"\nSaved model to: {model_path}")
+print(f"Saved confusion matrix to: {cm_txt_path}")
 
 plt.show()

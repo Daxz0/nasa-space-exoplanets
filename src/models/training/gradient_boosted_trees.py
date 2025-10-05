@@ -65,7 +65,7 @@ def train_and_evaluate(X, y):
 	disp.plot(cmap='Blues')
 	plt.title('Gradient Boosted Trees - Confusion Matrix')
 
-	return gbt, acc, (y_test, y_pred)
+	return gbt, acc, (unique_labels, cnf_matrix)
 
 
 def show_feature_importance(model, feature_names):
@@ -80,11 +80,22 @@ def main():
 	dataset_path, model_path = get_project_paths()
 
 	X, y, feature_names = load_data(dataset_path)
-	model, acc, _ = train_and_evaluate(X, y)
+	model, acc, (unique_labels, cnf_matrix) = train_and_evaluate(X, y)
 	show_feature_importance(model, feature_names)
 
 	joblib.dump(model, model_path)
 	print(f"\nSaved Gradient Boosted Trees model to: {model_path}")
+
+	# Save confusion matrix as raw text (TSV)
+	models_dir = os.path.dirname(model_path)
+	cm_txt_path = os.path.join(models_dir, 'gradient_boosted_trees_confusion_matrix.txt')
+	labels = list(unique_labels)
+	with open(cm_txt_path, 'w', encoding='utf-8') as f:
+		f.write('label\t' + '\t'.join(str(l) for l in labels) + '\n')
+		for i, lab in enumerate(labels):
+			row_vals = '\t'.join(str(int(v)) for v in cnf_matrix[i])
+			f.write(f"{lab}\t{row_vals}\n")
+	print(f"Saved Gradient Boosted Trees confusion matrix to: {cm_txt_path}")
 
 	plt.show()
 
