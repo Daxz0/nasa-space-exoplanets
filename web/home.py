@@ -33,29 +33,9 @@ st.markdown("""
   display: flex; justify-content: space-between; align-items: center;
 }
 .brand-name {
-  font-family: 'Bitcount Prop Double Ink','DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial !important;
-  font-weight: 800; font-size: 2.2rem; letter-spacing: .02em; line-height: 1; margin: 0;
-}
-
-/* Brand button styling */
-button[key="brand_home"] {
-  background: transparent !important;
-  border: none !important;
-  color: #e5e7eb !important;
-  font-family: 'Bitcount Prop Double Ink','DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial !important;
-  font-weight: 800 !important;
-  font-size: 2.2rem !important;
-  letter-spacing: .02em !important;
-  line-height: 1 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  height: auto !important;
-  width: auto !important;
-  box-shadow: none !important;
-}
-button[key="brand_home"]:hover {
-  background: rgba(255,255,255,0.05) !important;
-  transform: none !important;
+  font-family: 'Urbanist', sans-serif;
+  font-weight: 900; font-size: 1.8rem; color: #fff;
+  letter-spacing: -0.02em;
 }
 
 .nav { display: flex; gap: 1rem; }
@@ -153,20 +133,17 @@ with st.container():
     left, right = st.columns([2,4], vertical_alignment="center")
 
     with left:
-        if st.button("Exoura", key="brand_home", help="Go to home"):
-            st.rerun()
+        st.markdown('<h1 class="brand-name">Exoura</h1>', unsafe_allow_html=True)
 
     with right:
         st.markdown('<div class="nav">', unsafe_allow_html=True)
-        c1, c2, c3, c4 = st.columns(4)
-        if c1.button("Home", use_container_width=True):
-            st.rerun()
-        if c2.button("Education", use_container_width=True):
+        c1, c2, c3 = st.columns(3)
+        if c1.button("Education", use_container_width=True):
             st.switch_page("pages/education.py")
-        if c3.button("Demo", use_container_width=True):
+        if c2.button("Demo", use_container_width=True):
             st.switch_page("pages/demo.py")
-        if c4.button("Results", use_container_width=True):
-            st.switch_page("pages/results.py")
+        if c3.button("Methods", use_container_width=True):
+            st.switch_page("pages/methods.py")
         st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 

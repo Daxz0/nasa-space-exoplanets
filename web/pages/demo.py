@@ -36,8 +36,9 @@ st.markdown("""
   display: flex; justify-content: space-between; align-items: center;
 }
 .brand-name {
-  font-family: 'Bitcount Prop Double Ink','DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial !important;
-  font-weight: 800; font-size: 2.2rem; letter-spacing: .02em; line-height: 1; margin: 0;
+  font-family: 'Urbanist', sans-serif;
+  font-weight: 900; font-size: 1.8rem; color: #fff;
+  letter-spacing: -0.02em;
 }
 
 .nav { display: flex; gap: 1rem; }
@@ -158,20 +159,17 @@ with st.container():
     left, right = st.columns([2,4], vertical_alignment="center")
 
     with left:
-        if st.button("Exoura", key="brand_home", help="Go to home"):
-            st.switch_page("home.py")
+        st.markdown('<h1 class="brand-name">Exoura</h1>', unsafe_allow_html=True)
 
     with right:
         st.markdown('<div class="nav">', unsafe_allow_html=True)
-        c1, c2, c3, c4 = st.columns(4)
+        c1, c2, c3 = st.columns(3)
         if c1.button("Home", use_container_width=True):
             st.switch_page("home.py")
         if c2.button("Education", use_container_width=True):
             st.switch_page("education.py")
-        if c3.button("Demo", use_container_width=True):
-            st.rerun()
-        if c4.button("Results", use_container_width=True):
-            st.switch_page("results.py")
+        if c3.button("Methods", use_container_width=True):
+            st.switch_page("methods.py")
         st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
