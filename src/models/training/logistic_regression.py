@@ -26,11 +26,12 @@ log_reg_model.fit(X=X_train, y=y_train)
 y_pred=log_reg_model.predict(X_test)
 print(accuracy_score(y_test,y_pred))
 
-unique_labels = y_test.unique()
-cnf_matrix = confusion_matrix(y_test, y_pred, labels=unique_labels)
+labels_sorted = sorted(y_test.unique().tolist())
+cnf_matrix = confusion_matrix(y_test, y_pred, labels=labels_sorted)
 disp = ConfusionMatrixDisplay(confusion_matrix=cnf_matrix,
-                              display_labels=unique_labels)
+                              display_labels=labels_sorted)
 disp.plot(cmap='Blues')
+plt.title('Logistic Regression - Confusion Matrix')
 
 plt.show()
 
@@ -59,7 +60,7 @@ features = list(X.columns)
 print(f"Saved logistic regression model to: {lr_model_path}")
 
 cm_txt_path = out_dir / 'logistic_regression_confusion_matrix.txt'
-labels = list(unique_labels)
+labels = list(labels_sorted)
 with open(cm_txt_path, 'w', encoding='utf-8') as f:
     f.write('label\t' + '\t'.join(str(l) for l in labels) + '\n')
     for i, lab in enumerate(labels):

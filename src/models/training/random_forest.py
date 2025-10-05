@@ -28,11 +28,12 @@ rf_model.fit(X_train, y_train)
 y_pred = rf_model.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, y_pred))
 
-unique_labels = y_test.unique()
-cnf_matrix = confusion_matrix(y_test, y_pred, labels=unique_labels)
+labels_sorted = sorted(y_test.unique().tolist())
+cnf_matrix = confusion_matrix(y_test, y_pred, labels=labels_sorted)
 disp = ConfusionMatrixDisplay(confusion_matrix=cnf_matrix,
-                              display_labels=unique_labels)
+                              display_labels=labels_sorted)
 disp.plot(cmap='Blues')
+plt.title('Random Forest - Confusion Matrix')
 
 feature_importance = pd.DataFrame({
     'Feature': X.columns,
@@ -52,7 +53,7 @@ joblib.dump(rf_model, model_path)
 fi_sorted = feature_importance.sort_values(by='Importance', ascending=False)
 
 cm_txt_path = out_dir / 'random_forest_confusion_matrix.txt'
-labels = list(unique_labels)
+labels = list(labels_sorted)
 with open(cm_txt_path, 'w', encoding='utf-8') as f:
     f.write('label\t' + '\t'.join(str(l) for l in labels) + '\n')
     for i, lab in enumerate(labels):

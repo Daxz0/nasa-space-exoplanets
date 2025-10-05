@@ -59,13 +59,13 @@ def train_and_evaluate(X, y):
 	print(f"Accuracy: {acc:.4f}")
 	print("\nClassification report:\n", classification_report(y_test, y_pred))
 
-	unique_labels = y_test.unique()
-	cnf_matrix = confusion_matrix(y_test, y_pred, labels=unique_labels)
-	disp = ConfusionMatrixDisplay(confusion_matrix=cnf_matrix, display_labels=unique_labels)
+	labels_sorted = sorted(y_test.unique().tolist())
+	cnf_matrix = confusion_matrix(y_test, y_pred, labels=labels_sorted)
+	disp = ConfusionMatrixDisplay(confusion_matrix=cnf_matrix, display_labels=labels_sorted)
 	disp.plot(cmap='Blues')
 	plt.title('Gradient Boosted Trees - Confusion Matrix')
 
-	return gbt, acc, (unique_labels, cnf_matrix)
+	return gbt, acc, (labels_sorted, cnf_matrix)
 
 
 def show_feature_importance(model, feature_names):
@@ -80,7 +80,7 @@ def main():
 	dataset_path, model_path = get_project_paths()
 
 	X, y, feature_names = load_data(dataset_path)
-	model, acc, (unique_labels, cnf_matrix) = train_and_evaluate(X, y)
+	model, acc, (labels_sorted, cnf_matrix) = train_and_evaluate(X, y)
 	show_feature_importance(model, feature_names)
 
 	joblib.dump(model, model_path)
@@ -89,7 +89,7 @@ def main():
 	# Save confusion matrix as raw text (TSV)
 	models_dir = os.path.dirname(model_path)
 	cm_txt_path = os.path.join(models_dir, 'gradient_boosted_trees_confusion_matrix.txt')
-	labels = list(unique_labels)
+	labels = list(labels_sorted)
 	with open(cm_txt_path, 'w', encoding='utf-8') as f:
 		f.write('label\t' + '\t'.join(str(l) for l in labels) + '\n')
 		for i, lab in enumerate(labels):
