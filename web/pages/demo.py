@@ -163,13 +163,15 @@ with st.container():
 
     with right:
         st.markdown('<div class="nav">', unsafe_allow_html=True)
-        c1, c2, c3 = st.columns(3)
+        c1, c2, c3, c4 = st.columns(4)
         if c1.button("Home", use_container_width=True):
             st.switch_page("home.py")
         if c2.button("Education", use_container_width=True):
             st.switch_page("pages/education.py")
         if c3.button("Methods", use_container_width=True):
             st.switch_page("pages/methods.py")
+        if c4.button("Game", use_container_width=True):
+            st.switch_page("pages/game.py")
         st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -203,14 +205,12 @@ with input_cols[4]:
 
 inputs = [koi_period, koi_duration, koi_depth, koi_prad, koi_model_snr]
 
-# Only predict if any input is changed from default
 if any(x != 0.0 for x in inputs):
     input_array = np.array([inputs])
     predicted_index = model.predict(input_array)[0]
     labels = ['Not False Positive', 'False Positive']
     predicted_label = labels[predicted_index]
 
-    # Get prediction probabilities
     probs = model.predict_proba(input_array)[0]
     fig, ax = plt.subplots(figsize=(4,4))
     pie_result = ax.pie(
@@ -218,7 +218,6 @@ if any(x != 0.0 for x in inputs):
         colors=['#66b3ff','#ff9999'], textprops={'color':'#e0e6ed','fontsize':14})
     ax.axis('equal')
     
-    # Handle different return types from pie chart
     if len(pie_result) == 3:
         patches, texts, autotexts = pie_result
         plt.setp(autotexts, size=16, weight="bold")
@@ -227,9 +226,7 @@ if any(x != 0.0 for x in inputs):
     plt.setp(texts, size=14)
     fig.patch.set_alpha(0)
 
-    # Combine prediction and chart in one bottom box
     color = '#ff9999' if predicted_label == 'False Positive' else '#66b3ff'
-    # Prediction box with pie chart in its own inner box
     st.markdown(f"""
     <div style='background:rgba(20,30,48,0.85); border-radius:16px; padding:2em 2em 2em 2em; margin-top:1.5em; box-shadow:0 2px 12px rgba(30,60,114,0.12); max-width: 500px; margin-left:auto; margin-right:auto; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;'>
         <h2 style='color:#aee2ff; text-align:center; width:100%;'>Prediction</h2>

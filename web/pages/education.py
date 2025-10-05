@@ -105,17 +105,16 @@ with st.container():
 
     with right:
         st.markdown('<div class="nav">', unsafe_allow_html=True)
-        c1, c2, c3 = st.columns(3)
+        c1, c2, c3, c4 = st.columns(4)
         # NOTE: On Education we replace "Education" with "Home"
         if c1.button("Home", use_container_width=True):
-            try:
-                st.switch_page("home.py")
-            except Exception:
-                st.experimental_rerun()
+            st.switch_page("home.py")
         if c2.button("Demo", use_container_width=True):
             st.switch_page("pages/demo.py")
         if c3.button("Methods", use_container_width=True):
             st.switch_page("pages/methods.py")
+        if c4.button("Game", use_container_width=True):
+            st.switch_page("pages/game.py")
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
