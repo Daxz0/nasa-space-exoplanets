@@ -4,10 +4,11 @@ import joblib
 import pandas as pd
 from pathlib import Path
 import time
+from streamlit.components.v1 import html
 
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(
-    page_title="Exoura • Game",
+    page_title="Exoura - Game",
     page_icon="🪐",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -77,134 +78,57 @@ with st.container():
     st.markdown('</div>', unsafe_allow_html=True)
 
 
-
+# ------------------ GAME FUNCTIONS ------------------
 def generate_values():
-    """
-    Generate random realistic values for exoplanet parameters based on Kepler data ranges.
-    Returns a dictionary with parameter names as keys and generated values.
-    """
-    # Generate realistic random values based on Kepler dataset ranges
-    values = {
-        'koi_period': round(random.uniform(0.5, 500.0), 3),  # Orbital Period in days (0.5 to ~500 days)
-        'koi_duration': round(random.uniform(0.5, 20.0), 3),  # Transit Duration in hours (0.5 to ~20 hours)
-        'koi_depth': round(random.uniform(10.0, 15000.0), 1),  # Transit Depth in ppm (10 to ~15,000 ppm)
-        'koi_prad': round(random.uniform(0.1, 30.0), 2),  # Planet Radius in Earth radii (0.1 to ~30 Earth radii)
-        'koi_model_snr': round(random.uniform(5.0, 500.0), 1)  # Signal-to-Noise Ratio (5 to ~500)
+    return {
+        'koi_period': round(random.uniform(0.5, 500.0), 3),
+        'koi_duration': round(random.uniform(0.5, 20.0), 3),
+        'koi_depth': round(random.uniform(10.0, 15000.0), 1),
+        'koi_prad': round(random.uniform(0.1, 30.0), 2),
+        # Ratio of orbital semi-major axis to stellar radius (a/R*), unitless
+        'koi_dor': round(random.uniform(2.0, 100.0), 2),
     }
-    
-    return values
-
-
-def set_random_values():
-    """
-    Generate and set random values in Streamlit session state for all exoplanet parameters.
-    This function can be called when a "Generate Random Values" button is clicked.
-    """
-    random_values = generate_values()
-    
-    # Set the values in Streamlit session state
-    for param, value in random_values.items():
-        st.session_state[param] = value
-
 
 def get_parameter_info():
-    """
-    Returns information about each parameter for educational purposes.
-    """
     return {
-        'koi_period': {
-            'name': 'Orbital Period',
-            'unit': 'days',
-            'description': 'Time taken for one complete orbit around the star.',
-            'typical_range': '0.5 - 500 days'
-        },
-        'koi_duration': {
-            'name': 'Transit Duration',
-            'unit': 'hours', 
-            'description': 'Duration of the transit event in hours.',
-            'typical_range': '0.5 - 20 hours'
-        },
-        'koi_depth': {
-            'name': 'Transit Depth',
-            'unit': 'ppm',
-            'description': 'Depth of the transit in parts per million.',
-            'typical_range': '10 - 15,000 ppm'
-        },
-        'koi_prad': {
-            'name': 'Planet Radius',
-            'unit': 'Earth radii',
-            'description': 'Radius of the planet in Earth radii.',
-            'typical_range': '0.1 - 30 Earth radii'
-        },
-        'koi_model_snr': {
-            'name': 'Signal-to-Noise Ratio',
-            'unit': 'unitless',
-            'description': 'Signal-to-noise ratio of the transit model.',
-            'typical_range': '5 - 500'
-        }
+        'koi_period': {'name': 'Orbital Period', 'unit': 'days', 'description': 'Time taken for one complete orbit around the star.'},
+        'koi_duration': {'name': 'Transit Duration', 'unit': 'hours', 'description': 'Duration of the transit event in hours.'},
+        'koi_depth': {'name': 'Transit Depth', 'unit': 'ppm', 'description': 'Depth of the transit in parts per million.'},
+        'koi_prad': {'name': 'Planet Radius', 'unit': 'Earth radii', 'description': 'Radius of the planet in Earth radii.'},
+        'koi_dor': {'name': 'Orbit Ratio (a/R*)', 'unit': 'unitless', 'description': 'Ratio of orbital distance to stellar radius.'},
     }
 
-
 def load_model():
-    """
-    Load the trained Random Forest model.
-    """
-    # Correctly locate the model file relative to the current script
     model_path = Path(__file__).parent / 'random_forest_model.joblib'
-    model = joblib.load(model_path)
-    return model
+    return joblib.load(model_path)
 
 def predict_planet(model, planet_data):
-    """
-    Predict if a planet is 'CONFIRMED' or 'FALSE POSITIVE' and return confidence.
-    This aligns with the trained model that expects 8 features in this order:
-    ['koi_prad','koi_dicco_msky','koi_dikco_msky','koi_dor','koi_prad_err2','koi_period','koi_duration','koi_depth']
-    Returns: (label: str, confidence: float in [0,1])
-    """
-    # Build feature vector in the model's training order; fill unknowns with 0.0
+    # Model trained on 5 features in this exact order:
+    # ['koi_prad','koi_dor','koi_period','koi_duration','koi_depth']
     x = [[
         planet_data.get('koi_prad', 0.0),
-        planet_data.get('koi_dicco_msky', 0.0),
-        planet_data.get('koi_dikco_msky', 0.0),
         planet_data.get('koi_dor', 0.0),
-        planet_data.get('koi_prad_err2', 0.0),
         planet_data.get('koi_period', 0.0),
         planet_data.get('koi_duration', 0.0),
         planet_data.get('koi_depth', 0.0),
     ]]
-
     pred_raw = model.predict(x)[0]
     proba = model.predict_proba(x)[0]
-    classes = list(getattr(model, 'classes_', []))
-    # Map predicted class to index for confidence
-    try:
-        cls_index = classes.index(pred_raw)
-    except ValueError:
-        # Fallback if types differ (e.g., int vs str cast)
-        cls_index = 1 if str(pred_raw).lower().startswith('false') or str(pred_raw) == '1' else 0
-
+    classes = list(getattr(model,'classes_',[]))
+    try: cls_index = classes.index(pred_raw)
+    except ValueError: cls_index = 1 if str(pred_raw).lower().startswith('false') else 0
     confidence = float(proba[cls_index]) if len(proba) > cls_index else float(max(proba) if len(proba) else 0.0)
-
-    # Normalize label to UI terms
-    if isinstance(pred_raw, (int, float)):
-        label = 'FALSE POSITIVE' if int(pred_raw) == 1 else 'CONFIRMED'
-    else:
-        low = str(pred_raw).lower()
-        label = 'FALSE POSITIVE' if 'false' in low else 'CONFIRMED'
-
+    label = 'FALSE POSITIVE' if str(pred_raw).lower().startswith('false') else 'CONFIRMED'
     return label, confidence
 
+# ------------------ MAIN GAME ------------------
 def main():
-    """
-    Main function to run the exoplanet guessing game.
-    """
     st.title("Exoplanet Guessing Game")
     st.write("Can you tell if a planet is a **CONFIRMED** candidate or a **FALSE POSITIVE**?")
     st.write("Based on the following data, make your best guess!")
 
     model = load_model()
 
-    # Initialize or update the planet data in the session state
     if 'planet_data' not in st.session_state:
         st.session_state.planet_data = generate_values()
         pred_label, pred_conf = predict_planet(model, st.session_state.planet_data)
@@ -214,28 +138,65 @@ def main():
         st.session_state.start_time = time.time()
         st.session_state.elapsed_time = 0.0
 
-    # Display the planet's parameters
     planet_data = st.session_state.planet_data
     param_info = get_parameter_info()
+
+    # ------------------ SLEEK FLOATING TIMER ------------------
+    start_ms = int(st.session_state.get('start_time', time.time())*1000)
+    user_guessed = bool(st.session_state.get('user_guessed', False))
+    fixed_time = float(st.session_state.get('elapsed_time', 0.0))
     
-    # Live timer display (top-right)
-    timer_col1, timer_col2 = st.columns([3, 1])
-    with timer_col2:
-        if not st.session_state.get('user_guessed', False):
-            elapsed = time.time() - st.session_state.get('start_time', time.time())
-            st.metric(label="⏱️ Time", value=f"{elapsed:.1f}s")
-        else:
-            st.metric(label="⏱️ Time", value=f"{st.session_state.get('elapsed_time', 0.0):.1f}s")
-    
+    timer_html = f"""
+    <div id="timer-box" style="
+        position: fixed;
+        top: 0px;
+        right: 16px;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 12px 16px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.1);
+        box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        font-family: 'DM Sans', sans-serif;
+        color: #ffffff;
+        font-size: 20px;
+        gap: 6px;
+        min-width: 120px;
+    ">
+        <span style="opacity:0.8;">Time</span>
+        <strong id="timer-value" style="text-align:right; font-size:28px; font-weight:700;">0.0s</strong>
+    </div>
+
+    <script>
+        const start = {start_ms};
+        const guessed = {str(user_guessed).lower()};
+        const fixed = {fixed_time:.3f};
+        const el = document.getElementById('timer-value');
+        function fmt(s){{ return (Math.round(s*10)/10).toFixed(1) + 's'; }}
+        if (guessed) {{
+            el.textContent = fmt(fixed);
+        }} else {{
+            function tick(){{ const now = Date.now(); const sec = (now - start)/1000.0; el.textContent = fmt(sec); }}
+            tick();
+            window.__exouraTimer && clearInterval(window.__exouraTimer);
+            window.__exouraTimer = setInterval(tick, 100);
+        }}
+    </script>
+    """
+    html(timer_html, height=48)
+
+    # ------------------ DISPLAY PLANET PARAMETERS ------------------
     cols = st.columns(len(planet_data))
     for i, (param, value) in enumerate(planet_data.items()):
         info = param_info.get(param, {})
         with cols[i]:
-            st.metric(label=info.get('name', param), value=f"{value} {info.get('unit', '')}", help=info.get('description'))
+            st.metric(label=info.get('name', param), value=f"{value} {info.get('unit','')}", help=info.get('description'))
 
     st.markdown("---")
 
-    # Game interaction
+    # ------------------ GAME INTERACTIONS ------------------
     if not st.session_state.user_guessed:
         st.subheader("Your Guess:")
         guess_cols = st.columns(2)
@@ -245,7 +206,6 @@ def main():
                 st.session_state.user_guessed = True
                 st.session_state.elapsed_time = time.time() - st.session_state.get('start_time', time.time())
                 st.rerun()
-
         with guess_cols[1]:
             if st.button("FALSE POSITIVE", use_container_width=True):
                 st.session_state.user_guess = "FALSE POSITIVE"
@@ -253,22 +213,16 @@ def main():
                 st.session_state.elapsed_time = time.time() - st.session_state.get('start_time', time.time())
                 st.rerun()
     else:
-        # Provide feedback after the user has guessed
         user_guess = st.session_state.user_guess
         correct_answer = st.session_state.model_prediction
-        confidence_pct = st.session_state.get('model_confidence', 0.0) * 100
-
+        confidence_pct = st.session_state.get('model_confidence',0.0)*100
         if user_guess == correct_answer:
             st.success(f"Correct! You guessed **{user_guess}**, and the model agrees.")
         else:
             st.error(f"Incorrect! You guessed **{user_guess}**, but the model predicted **{correct_answer}**.")
+        st.info(f"**Model's Prediction**: **{correct_answer}**  •  **Confidence**: {confidence_pct:.1f}%  •  **Your time**: {st.session_state.get('elapsed_time',0.0):.1f}s")
         
-        st.info(
-            f"**Model's Prediction**: **{correct_answer}**  •  **Confidence**: {confidence_pct:.1f}%  •  **Your time**: {st.session_state.get('elapsed_time', 0.0):.1f}s"
-        )
-
         if st.button("Next Planet", use_container_width=True):
-            # Reset the game with new values
             st.session_state.planet_data = generate_values()
             pred_label, pred_conf = predict_planet(model, st.session_state.planet_data)
             st.session_state.model_prediction = pred_label
@@ -278,12 +232,5 @@ def main():
             st.session_state.elapsed_time = 0.0
             st.rerun()
 
-    # Auto-refresh every second to update the live timer while awaiting a guess
-    if not st.session_state.get('user_guessed', False):
-        time.sleep(1)
-        st.rerun()
-
 if __name__ == "__main__":
     main()
-
-

@@ -10,7 +10,7 @@ import joblib
 
 df = pd.read_csv('src/data/keplar.csv', comment='#')
 
-X = df[['koi_prad','koi_dicco_msky','koi_dikco_msky','koi_dor','koi_prad_err2','koi_period','koi_duration','koi_depth']]
+X = df[['koi_prad','koi_dor','koi_period','koi_duration','koi_depth']]
 
 
 # exclude = ['koi_disposition', 'koi_pdisposition', 'koi_model_snr', 'koi_fpflag_nt', 'koi_fpflag_ss', 'koi_fpflag_co', 'koi_fpflag_ec', 'koi_score']

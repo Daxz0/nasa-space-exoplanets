@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import joblib
+from pathlib import Path
 import matplotlib.pyplot as plt
 
 # ------------------ PAGE CONFIG ------------------
@@ -188,7 +189,25 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-model = joblib.load('random_forest_model.joblib')
+def load_demo_model():
+    """Load the Random Forest model from common locations.
+    Tries the page directory, the web/pages path, and the trained_models path.
+    """
+    here = Path(__file__).parent
+    repo_root = here.parents[2] if len(here.parents) >= 2 else Path.cwd()
+    candidates = [
+        here / 'random_forest_model.joblib',
+        here.parent / 'pages' / 'random_forest_model.joblib',
+        repo_root / 'web' / 'pages' / 'random_forest_model.joblib',
+        repo_root / 'src' / 'models' / 'trained_models' / 'random_forest_model.joblib',
+    ]
+    for p in candidates:
+        if p.exists():
+            return joblib.load(p)
+    st.error("Couldn't find random_forest_model.joblib. Tried: " + ", ".join(str(p) for p in candidates))
+    raise FileNotFoundError("random_forest_model.joblib not found in expected locations")
+
+model = load_demo_model()
 
 
 input_cols = st.columns(5)
@@ -201,16 +220,15 @@ with input_cols[2]:
 with input_cols[3]:
     koi_prad = st.number_input('Planet Radius (Earth radii)', value=0.0, step=1.0, format="%f", key='koi_prad', help='Radius of the planet in Earth radii.')
 with input_cols[4]:
-    koi_model_snr = st.number_input('Signal Noise Ratio', value=0.0, step=1.0, format="%f", key='koi_model_snr', help='Signal-to-noise ratio of the model.')
+    koi_dor = st.number_input('Orbit Ratio (a/R*)', value=0.0, step=0.1, format="%f", key='koi_dor', help='Ratio of orbital distance to stellar radius (unitless).')
 
-inputs = [koi_period, koi_duration, koi_depth, koi_prad, koi_model_snr]
+# Model expects features in this order: ['koi_prad','koi_dor','koi_period','koi_duration','koi_depth']
+inputs = [koi_prad, koi_dor, koi_period, koi_duration, koi_depth]
 
 if any(x != 0.0 for x in inputs):
     input_array = np.array([inputs])
-    predicted_index = model.predict(input_array)[0]
-    labels = ['Not False Positive', 'False Positive']
-    predicted_label = labels[predicted_index]
-
+    predicted_label = model.predict(input_array)[0]
+    labels = list(getattr(model, 'classes_', [])) or ['CONFIRMED', 'FALSE POSITIVE']
     probs = model.predict_proba(input_array)[0]
     fig, ax = plt.subplots(figsize=(4,4))
     pie_result = ax.pie(
@@ -226,7 +244,13 @@ if any(x != 0.0 for x in inputs):
     plt.setp(texts, size=14)
     fig.patch.set_alpha(0)
 
-    color = '#ff9999' if predicted_label == 'False Positive' else '#66b3ff'
+    label_norm = str(predicted_label).strip().upper()
+    if label_norm == 'FALSE POSITIVE':
+        color = '#ff9999'  # red-ish
+    elif label_norm == 'CONFIRMED':
+        color = '#66b3ff'  # blue-ish
+    else:
+        color = '#f6d365'  # warm accent for other classes (e.g., CANDIDATE)
     st.markdown(f"""
     <div style='background:rgba(20,30,48,0.85); border-radius:16px; padding:2em 2em 2em 2em; margin-top:1.5em; box-shadow:0 2px 12px rgba(30,60,114,0.12); max-width: 500px; margin-left:auto; margin-right:auto; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;'>
         <h2 style='color:#aee2ff; text-align:center; width:100%;'>Prediction</h2>
