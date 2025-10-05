@@ -99,8 +99,13 @@ def get_parameter_info():
     }
 
 def load_model():
-    model_path = Path(__file__).parent / 'random_forest_model.joblib'
-    return joblib.load(model_path)
+    """
+    Load the trained Random Forest model.
+    """
+    # Correctly locate the model file relative to the current script
+    model_path = "random_forest_model.joblib"
+    model = joblib.load("random_forest_model.joblib")
+    return model
 
 def predict_planet(model, planet_data):
     # Model trained on 5 features in this exact order:
