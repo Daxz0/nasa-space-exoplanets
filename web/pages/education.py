@@ -1,5 +1,5 @@
 # web/pages/education.py
-# Exoura — Education (Section 1 only) with Home/Demo/methods nav (copied from Home)
+# Exoura — Education (Section 1 only) with Home/Demo/Results nav (copied from Home)
 # - Nav copied 1:1 from Home, but "Education" button becomes "Home" -> home.py
 # - Section 1: "What is an exoplanet?" + exoplanet_rotation.gif
 # - Sections 2+ left as TODOs
@@ -83,7 +83,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------ HEADER (Home / Demo / methods) ------------------
+# ------------------ HEADER (Home / Demo / Results) ------------------
 with st.container():
     st.markdown('<div class="site-header">', unsafe_allow_html=True)
     left, right = st.columns([2,4], vertical_alignment="center")
@@ -94,12 +94,22 @@ with st.container():
     with right:
         st.markdown('<div class="nav">', unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
+        # NOTE: On Education we replace "Education" with "Home"
         if c1.button("Home", use_container_width=True):
-            st.switch_page("home.py")
+            try:
+                st.switch_page("home.py")
+            except Exception:
+                st.experimental_rerun()
         if c2.button("Demo", use_container_width=True):
-            st.switch_page("demo.py")
-        if c3.button("Methods", use_container_width=True):
-            st.switch_page("methods.py")
+            try:
+                st.switch_page("pages/demo.py")
+            except Exception:
+                st.experimental_rerun()
+        if c3.button("Results", use_container_width=True):
+            try:
+                st.switch_page("pages/results.py")
+            except Exception:
+                st.experimental_rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
@@ -133,7 +143,7 @@ def find_gif(filename: str) -> Optional[Path]:
 # ------------------ SECTION 1: What is an exoplanet? ------------------
 st.markdown('<div class="main-wrap">', unsafe_allow_html=True)
 
-st.markdown("### What is an exoplanet?")
+st.markdown('<h3 class="gradient-title">What is an exoplanet?</h3>', unsafe_allow_html=True)
 st.markdown(
     "<p class='lead'>An <strong>exoplanet</strong> is a planet orbiting a star other than the Sun. "
     "Because planets are faint and close to bright stars, we usually can’t see them directly. "
@@ -176,7 +186,7 @@ st.markdown("</div>", unsafe_allow_html=True)  # close .main-wrap
 
 st.markdown('<div class="main-wrap">', unsafe_allow_html=True)
 
-st.markdown("### What is transit photometry?")
+st.markdown('<h3 class="gradient-title">What is transit photometry?</h3>', unsafe_allow_html=True)
 st.markdown(
     "<p class='lead'>When a planet crosses (transits) its star, it blocks a tiny fraction of light. "
     "On a light curve, that shows up as a small, repeating <strong>dip</strong>. "
@@ -262,7 +272,7 @@ st.markdown("</div>", unsafe_allow_html=True)  # close .main-wrap for Section 2
 
 st.markdown('<div class="main-wrap">', unsafe_allow_html=True)
 
-st.markdown("### What are false positives?")
+st.markdown('<h3 class="gradient-title">What are false positives?</h3>', unsafe_allow_html=True)
 st.markdown(
     "<p class='lead'>Not every dip in brightness is caused by a planet. "
     "<strong>False positives</strong> are planet look-alikes created by stars, instruments, or nearby sources. "
@@ -359,7 +369,7 @@ st.markdown("</div>", unsafe_allow_html=True)  # close .main-wrap for Section 3
 
 st.markdown('<div class="main-wrap">', unsafe_allow_html=True)
 
-st.markdown("### Planet vs False Positive — how to tell")
+st.markdown('<h3 class="gradient-title">Planet vs False Positive — how to tell</h3>', unsafe_allow_html=True)
 st.markdown(
     "<p class='lead'>Use this quick checklist to decide if a dip is likely a "
     "<strong>planet</strong> or a <strong>false positive</strong>. "
