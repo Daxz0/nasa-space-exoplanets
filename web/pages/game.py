@@ -150,7 +150,7 @@ def load_model():
     Load the trained Random Forest model.
     """
     # Correctly locate the model file relative to the current script
-    model_path = Path(__file__).parent / 'random_forest_model.joblib'
+    model_path = "random_forest_model.joblib"
     model = joblib.load(model_path)
     return model
 
