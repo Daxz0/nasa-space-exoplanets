@@ -133,23 +133,75 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Unified blue button theme across the app (overrides theme)
+st.markdown(
+    """
+<style>
+/* Unified blue button theme */
+.stButton > button {
+  background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  border: none !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(30,60,114,0.2) !important;
+  transition: transform .2s ease, box-shadow .2s ease !important;
+  /* Size/spacing to avoid text wrapping */
+  padding: 0.6rem 1.1rem !important;
+  min-height: 44px !important;
+  line-height: 1.2 !important;
+  font-size: 0.95rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+.stButton > button:hover { transform: translateY(-1px) !important; box-shadow: 0 4px 12px rgba(30,60,114,0.3) !important; }
+
+/* Ensure nav buttons match */
+.nav .stButton>button {
+  background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  border: none !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(30,60,114,0.2) !important;
+  /* Make nav buttons bigger and non-wrapping */
+  padding: 0.6rem 1.1rem !important;
+  min-height: 44px !important;
+  min-width: 120px !important;
+  line-height: 1.2 !important;
+  font-size: 0.95rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+.nav .stButton>button:hover { transform: translateY(-1px) !important; box-shadow: 0 4px 12px rgba(30,60,114,0.3) !important; }
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
 # ------------------ HEADER ------------------
 with st.container():
     st.markdown('<div class="site-header">', unsafe_allow_html=True)
-    left, right = st.columns([2,4], vertical_alignment="center")
+    left, right = st.columns([2,5], vertical_alignment="center")
 
     with left:
         st.markdown('<h1 class="brand-name">Exoura</h1>', unsafe_allow_html=True)
 
     with right:
         st.markdown('<div class="nav">', unsafe_allow_html=True)
-        c1, c2, c3 = st.columns(3)
+        c1, c2, c3, c4 = st.columns(4)
         if c1.button("Education", use_container_width=True):
             st.switch_page("pages/education.py")
         if c2.button("Demo", use_container_width=True):
             st.switch_page("pages/demo.py")
         if c3.button("Methods", use_container_width=True):
             st.switch_page("pages/methods.py")
+        if c4.button("Game", use_container_width=True):
+            st.switch_page("pages/game.py")
         st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -172,7 +224,7 @@ st.markdown("""
 <div class="video-section">
   <div class="video-background"></div>
   <div class="video-container">
-    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+    <iframe src="https://youtu.be/506-EpLlBrI" 
             title="Demo Video" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen></iframe>

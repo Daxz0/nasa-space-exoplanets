@@ -55,6 +55,50 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Unified blue button theme across the app (overrides theme)
+st.markdown(
+        """
+<style>
+.stButton > button {
+    background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    border: none !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 8px rgba(30,60,114,0.2) !important;
+    padding: 0.6rem 1.1rem !important;
+    min-height: 44px !important;
+    line-height: 1.2 !important;
+    font-size: 0.95rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+}
+.stButton > button:hover { transform: translateY(-1px) !important; box-shadow: 0 4px 12px rgba(30,60,114,0.3) !important; }
+.nav .stButton>button {
+    background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    border: none !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 8px rgba(30,60,114,0.2) !important;
+    padding: 0.6rem 1.1rem !important;
+    min-height: 44px !important;
+    min-width: 120px !important;
+    line-height: 1.2 !important;
+    font-size: 0.95rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+}
+.nav .stButton>button:hover { transform: translateY(-1px) !important; box-shadow: 0 4px 12px rgba(30,60,114,0.3) !important; }
+</style>
+""",
+        unsafe_allow_html=True,
+)
+
 # ------------------ HEADER ------------------
 with st.container():
     st.markdown('<div class="site-header">', unsafe_allow_html=True)
