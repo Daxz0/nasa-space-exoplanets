@@ -114,9 +114,11 @@ with st.container():
     with right_col:
         st.markdown('<div class="nav">', unsafe_allow_html=True)
         nav_cols = st.columns(4, vertical_alignment="center")
-        for i, name in enumerate(["Home", "Education", "Play", "Results"]):
-            if nav_cols[i].button(name, use_container_width=True, key=f"nav_{name}"):
-                st.session_state.page = name
+        # display_label may differ from internal page id; keep page ids the same so router works
+        nav_items = [("Home", "Home"), ("Education", "Education"), ("Demo", "Demo"), ("Results", "Results")]
+        for i, (page_id, display_label) in enumerate(nav_items):
+            if nav_cols[i].button(display_label, use_container_width=True, key=f"nav_{page_id}"):
+                st.session_state.page = page_id
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div></div>', unsafe_allow_html=True)
