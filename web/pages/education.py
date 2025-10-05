@@ -61,6 +61,25 @@ st.markdown("""
 .callout { padding: .75rem 1rem; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; background: rgba(255,255,255,0.04); }
 .kicker { text-transform: uppercase; letter-spacing: .12em; font-weight: 700; font-size: .8rem; color: #9ca3af; }
 .small { font-size: .9rem; opacity: .85; }
+
+/* Gradient titles (purple -> blue) scoped inside .main-wrap */
+.main-wrap h1, .main-wrap h2, .main-wrap h3, .main-wrap .page-hero h1 {
+    background: linear-gradient(90deg, #7c3aed 0%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Explicit class to force gradient on headings rendered by Streamlit markdown */
+.gradient-title {
+    background: linear-gradient(90deg, #7c3aed 0%, #2563eb 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    display: inline-block !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -237,3 +256,164 @@ with media:
 
 st.markdown("---")
 st.markdown("</div>", unsafe_allow_html=True)  # close .main-wrap for Section 2
+
+# ------------------ SECTION 3: What are false positives? ------------------
+# (Append-only; safe to paste at the end of your current file)
+
+st.markdown('<div class="main-wrap">', unsafe_allow_html=True)
+
+st.markdown("### What are false positives?")
+st.markdown(
+    "<p class='lead'>Not every dip in brightness is caused by a planet. "
+    "<strong>False positives</strong> are planet look-alikes created by stars, instruments, or nearby sources. "
+    "Knowing the usual suspects helps you avoid common traps.</p>",
+    unsafe_allow_html=True
+)
+
+def fp_card(title: str, what_happens: list[str], how_to_tell: list[str]):
+    st.markdown(f"#### {title}")
+    st.markdown("**What happens:**")
+    for s in what_happens:
+        st.markdown(f"- {s}")
+    st.markdown("**How to tell apart:**")
+    for s in how_to_tell:
+        st.markdown(f"- {s}")
+    st.divider()
+
+# 1) Eclipsing binaries (EBs)
+fp_card(
+    "Eclipsing binaries (EBs)",
+    ["Two stars orbit each other; one blocks the other’s light, mimicking a transit."],
+    [
+        "Dips are often **too deep** (≫ 5–10% brightness drop).",
+        "**Odd vs even** dips can differ; a **secondary eclipse** may appear at phase ≈ 0.5.",
+        "Very large **radial velocities** (km/s) in follow-up indicate stellar masses.",
+    ],
+)
+
+# 2) Background / blended binaries
+fp_card(
+    "Background / blended binaries",
+    ["A faint binary system aligns behind/near the target; their light blends with the target’s."],
+    [
+        "Depth appears **diluted**; doesn’t add up once contamination is corrected.",
+        "**Centroid shift** during dips; **chromatic** (color-dependent) transit depth.",
+        "High-resolution imaging reveals multiple sources.",
+    ],
+)
+
+# 3) Star spots / stellar activity
+fp_card(
+    "Star spots / stellar activity",
+    ["Dark spots on a rotating star or flares cause brightness dips that mimic transits."],
+    [
+        "Signals are **not strictly periodic** like planetary orbits.",
+        "Dips are **broader** and **evolve** over time; often look sinusoidal.",
+        "Spectroscopic monitoring shows activity cycles / rotation.",
+    ],
+)
+
+# 4) Instrumental / systematic noise
+fp_card(
+    "Instrumental / systematic noise",
+    ["Detector glitches, spacecraft jitter, or cosmic rays can create artificial dips."],
+    [
+        "Usually **single** or **irregular** events; **don’t repeat** at a steady period.",
+        "Often **asymmetric/jagged**; disappear after good **detrending/calibration**.",
+    ],
+)
+
+# 5) Pulsating / variable stars
+fp_card(
+    "Pulsating / variable stars",
+    ["Some stars naturally vary in brightness due to pulsations or irregular variability."],
+    [
+        "Variations are **quasi-periodic or multi-periodic**, not a short symmetric transit.",
+        "Depth and duration can **change** from cycle to cycle.",
+        "Frequency analysis reveals stellar pulsations.",
+    ],
+)
+
+# 6) Contamination from nearby stars
+fp_card(
+    "Contamination from nearby stars",
+    ["Light from nearby stars in the same pixel/aperture **dilutes** the target’s signal."],
+    [
+        "**Centroid analysis** shows the dip originates slightly **off-target**.",
+        "After **de-blending**, the inferred radius is **too large** (stellar).",
+    ],
+)
+
+st.markdown(
+    "<div class='callout small'>Rule of thumb: planet-like depths are usually **≤ 2–3%**. "
+    "If you’re seeing **≫ 5–10%**, suspect an <strong>eclipsing binary</strong> or another non-planet scenario.</div>",
+    unsafe_allow_html=True,
+)
+
+st.markdown("---")
+st.markdown("</div>", unsafe_allow_html=True)  # close .main-wrap for Section 3
+
+
+# ------------------ SECTION 4: Planet vs False Positive — how to tell ------------------
+# (Append-only; follows immediately after Section 3)
+
+st.markdown('<div class="main-wrap">', unsafe_allow_html=True)
+
+st.markdown("### Planet vs False Positive — how to tell")
+st.markdown(
+    "<p class='lead'>Use this quick checklist to decide if a dip is likely a "
+    "<strong>planet</strong> or a <strong>false positive</strong>. "
+    "It’s beginner-friendly and maps directly to what you’ll see in the game.</p>",
+    unsafe_allow_html=True
+)
+
+st.markdown("#### The 60-second checklist")
+st.markdown("1) **Repeatability (Period):** Do similar dips repeat at **regular intervals**?  \n"
+            " • No → likely **noise/activity**.  \n"
+            " • Yes → go to step 2.")
+st.markdown("2) **Depth sanity:** Is the dip **planet-sized** (typically **≤ 2–3%**) and **not** ≫ **5–10%**?  \n"
+            " • Too deep → suspect **eclipsing binary (EB)**.")
+st.markdown("3) **Shape & duration:** Is the dip **short**, **smooth**, and fairly **symmetric** (U or shallow V)?  \n"
+            " • Jagged/one-off → **instrumental** or **stellar activity**.")
+st.markdown("4) **Odd vs even:** In a phase-folded view, are **odd and even dips the same** depth?  \n"
+            " • Different → **EB**.")
+st.markdown("5) **Secondary / centroid / color:**  \n"
+            " • **Secondary** dip near phase ~0.5 → **EB/blended binary**.  \n"
+            " • **Centroid shift** or **color-dependent depth** → **blend/contamination**.")
+
+st.markdown("#### Quick side-by-side tells")
+colA, colB = st.columns(2)
+with colA:
+    st.markdown("**Planet-like usually…**")
+    st.markdown("- ✅ Repeats with a steady **period**")
+    st.markdown("- ✅ **Small depth** (<~2–3%)")
+    st.markdown("- ✅ **Smooth, symmetric** transit shape")
+    st.markdown("- ✅ **Odd = even** depths")
+    st.markdown("- ✅ **No secondary**, **no centroid shift**")
+
+with colB:
+    st.markdown("**False positive-like often…**")
+    st.markdown("- ❌ Irregular or **non-repeating**")
+    st.markdown("- ❌ **Deep** dips (≫ 5–10%)")
+    st.markdown("- ❌ **Odd ≠ even** or clear **secondary**")
+    st.markdown("- ❌ **Jagged/sinusoidal** (instrument/stellar)")
+    st.markdown("- ❌ **Centroid motion** or **chromatic** depth")
+
+st.markdown("#### Handy numbers (rules of thumb)")
+st.latex(r"\text{depth} \;\approx\; \left(\frac{R_p}{R_\star}\right)^2")
+st.markdown(
+    "- **$R_p$** = planet radius • **$R_\\star$** = star radius  \n"
+    "- **Hot Jupiter:** $R_p/R_\\star \\approx 0.10$ → depth ≈ **1%** (10,000 ppm)  \n"
+    "- **Neptune-size:** $\\approx 0.035$ → depth ≈ **0.12%** (≈1,200 ppm)  \n"
+    "- **Earth–Sun:** $\\approx 0.009$ → depth ≈ **0.008%** (≈80 ppm)"
+)
+
+st.markdown(
+    "<div class='callout small'><strong>Decision path:</strong> "
+    "Repeat? → Size sane? → Shape okay? → Odd = Even? → No secondary/centroid? "
+    "If yes to all → <strong>Planet candidate</strong>. Otherwise → <strong>False positive likely</strong>.</div>",
+    unsafe_allow_html=True,
+)
+
+st.markdown("---")
+st.markdown("</div>", unsafe_allow_html=True)  # close .main-wrap for Section 4
