@@ -80,6 +80,18 @@ st.markdown("""
     color: transparent !important;
     display: inline-block !important;
 }
+
+/* FP card title: subtle green->blue gradient for the false-positive cards */
+.fp-title {
+    background: linear-gradient(90deg, rgba(45,212,191,0.95) 0%, rgba(56,189,248,0.85) 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    display: inline-block !important;
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -169,7 +181,7 @@ st.markdown("---")
 
 # ------------------ PLACEHOLDERS for next sections (to add later) ------------------
 # st.markdown("### What is transit photometry?")  # TODO: Section 2
-# st.markdown("### Planet vs False Positive — how to tell")  # TODO: Section 3
+# st.markdown("### Planet vs False Positive: how to tell")  # TODO: Section 3
 # st.markdown("### Common False Positives")  # TODO: Section 4
 # st.markdown("### Ready? → Try the Demo")  # TODO: CTA
 
@@ -275,7 +287,7 @@ st.markdown(
 )
 
 def fp_card(title: str, what_happens: list[str], how_to_tell: list[str]):
-    st.markdown(f"#### {title}")
+    st.markdown(f"<h4 class='fp-title'>{title}</h4>", unsafe_allow_html=True)
     st.markdown("**What happens:**")
     for s in what_happens:
         st.markdown(f"- {s}")
@@ -358,12 +370,12 @@ st.markdown("---")
 st.markdown("</div>", unsafe_allow_html=True)  # close .main-wrap for Section 3
 
 
-# ------------------ SECTION 4: Planet vs False Positive — how to tell ------------------
+# ------------------ SECTION 4: Planet vs False Positive: how to tell ------------------
 # (Append-only; follows immediately after Section 3)
 
 st.markdown('<div class="main-wrap">', unsafe_allow_html=True)
 
-st.markdown('<h3 class="gradient-title">Planet vs False Positive — how to tell</h3>', unsafe_allow_html=True)
+st.markdown('<h3 class="gradient-title">Planet vs False Positive: how to tell</h3>', unsafe_allow_html=True)
 st.markdown(
     "<p class='lead'>Use this quick checklist to decide if a dip is likely a "
     "<strong>planet</strong> or a <strong>false positive</strong>. "
