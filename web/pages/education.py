@@ -7,6 +7,7 @@
 from pathlib import Path
 from typing import Optional
 import streamlit as st
+import base64
 
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(
@@ -160,3 +161,89 @@ st.markdown("---")
 # st.markdown("### Ready? → Try the Demo")  # TODO: CTA
 
 st.markdown("</div>", unsafe_allow_html=True)  # close .main-wrap
+
+# ------------------ SECTION 2: What is transit photometry? ------------------
+# (Append-only; safe to paste at the end of your current file)
+
+st.markdown('<div class="main-wrap">', unsafe_allow_html=True)
+
+st.markdown("### What is transit photometry?")
+st.markdown(
+    "<p class='lead'>When a planet crosses (transits) its star, it blocks a tiny fraction of light. "
+    "On a light curve, that shows up as a small, repeating <strong>dip</strong>. "
+    "By measuring how <em>deep</em> the dip is, how often it <em>repeats</em> (the period), and its <em>shape</em>, "
+    "we can tell planet-like signals from look-alikes.</p>",
+    unsafe_allow_html=True
+)
+
+txt, media = st.columns([7, 5], vertical_alignment="center")
+
+with txt:
+    st.markdown("#### The three cues you’ll use")
+    st.markdown("**1) Depth — how deep is the dip?**")
+    st.latex(r"\text{depth} \;\approx\; \left(\frac{R_p}{R_\star}\right)^2")
+    st.markdown(
+        "- **$R_p$** = planet radius (size of the planet)\n"
+        "- **$R_\\star$** = stellar radius (size of the star; the ★ symbol means “star”)\n"
+        "- Bigger planets block more light → a deeper dip."
+    )
+
+    st.markdown("**Rules of thumb (depth examples):**")
+    st.markdown(
+        "- **Hot Jupiter** ($R_p/R_\\star \\approx 0.10$) → depth ≈ **1%** (10,000 ppm)\n"
+        "- **Neptune-size** ($R_p/R_\\star \\approx 0.035$) → depth ≈ **0.12%** (≈1,200 ppm)\n"
+        "- **Earth–Sun** ($R_p/R_\\star \\approx 0.009$) → depth ≈ **0.008%** (≈80 ppm)"
+    )
+
+    st.markdown("**What depths look planet-like?**")
+    st.markdown(
+        "- **Typically ≤ 2–3%** is consistent with planets (depends on star size).\n"
+        "- **≫ 5–10%** is usually **too deep** for a planet → often an **eclipsing binary** (two stars)."
+    )
+
+    st.markdown("**2) Period — does it repeat steadily?**")
+    st.markdown(
+        "- Measure the time from one dip to the next: that’s the **orbital period**.\n"
+        "- Real planets produce dips that **repeat at regular intervals**."
+    )
+
+    st.markdown("**3) Duration & shape — does it look like a transit?**")
+    st.markdown(
+        "- A transit is **short** compared to the period and **smooth** with a fairly **symmetric** U-shape "
+        "(a shallow V can also be fine).\n"
+        "- Jagged, step-like, or single one-off dips are **suspicious** (often noise or star activity)."
+    )
+
+    st.markdown(
+        "<div class='callout small'>Why this matters: in Exoura, most quick, correct calls come from reading "
+        "<strong>Depth + Period + Shape</strong>. If any of these don’t look right, consider "
+        "<strong>Not a planet</strong> and let follow-up data decide.</div>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown("**Unit translator (handy):**")
+    st.markdown(
+        "- **1%** drop = **10,000 ppm**  •  **0.1%** = **1,000 ppm**  •  **0.01%** = **100 ppm**"
+    )
+
+with media:
+    gif2 = find_gif("transit_rotation.gif")
+    if gif2:
+        # Embed as base64 data URI to preserve GIF animation reliably
+        try:
+            with open(gif2, 'rb') as f:
+                data = f.read()
+            b64 = base64.b64encode(data).decode('ascii')
+            img_html = (
+                f'<img src="data:image/gif;base64,{b64}" '
+                f'alt="Transit animation" style="width:100%;height:auto;border-radius:8px;" />'
+            )
+            st.markdown(img_html, unsafe_allow_html=True)
+        except Exception:
+            # fallback to st.image if embedding fails
+            st.image(str(gif2), caption="Transit photometry: a planet crossing its star creates a repeating dip.", use_container_width=True)
+    else:
+        st.warning("Couldn’t find `transit_rotation.gif`. Place it in `web/pages/`, `web/`, or `web/assets/`.")
+
+st.markdown("---")
+st.markdown("</div>", unsafe_allow_html=True)  # close .main-wrap for Section 2
