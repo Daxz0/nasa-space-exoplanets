@@ -62,6 +62,4 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['Not False Po
 disp.plot(cmap=plt.cm.Blues)
 plt.title('Confusion Matrix')
 plt.show()
-disp.plot(cmap=plt.cm.Blues)
-plt.title('Confusion Matrix')
-plt.show()
+

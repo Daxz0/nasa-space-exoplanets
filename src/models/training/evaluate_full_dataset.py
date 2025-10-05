@@ -1,9 +1,6 @@
 import joblib
 import pandas as pd
-
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
 
 # Load the trained model
 model = joblib.load('trained_exoplanet_model.joblib')
@@ -28,20 +25,9 @@ df['is_false_positive'] = (df[target] == 'FALSE POSITIVE').astype(int)
 X = df[features]
 y = df['is_false_positive']
 
+# Predict on the entire dataset
+y_pred = model.predict(X)
 
-# Shuffle and split the data into train and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, shuffle=True)
-
-# Predict on the test set only
-y_pred = model.predict(X_test)
-
-print('Accuracy on test set:', accuracy_score(y_test, y_pred))
-print('Classification Report (test set):')
-print(classification_report(y_test, y_pred, target_names=['Not False Positive', 'False Positive']))
-
-# Confusion matrix for test set
-cm = confusion_matrix(y_test, y_pred, labels=[0, 1])
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['Not False Positive', 'False Positive'])
-disp.plot(cmap=plt.cm.Blues)
-plt.title('Confusion Matrix (Test Set)')
-plt.show()
+print('Overall Accuracy on all data:', accuracy_score(y, y_pred))
+print('Classification Report (all data):')
+print(classification_report(y, y_pred, target_names=['Not False Positive', 'False Positive']))
