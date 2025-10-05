@@ -78,9 +78,9 @@ with st.container():
         if c1.button("Home", use_container_width=True):
             st.switch_page("home.py")
         if c2.button("Demo", use_container_width=True):
-            st.switch_page("demo.py")
+            st.switch_page("pages/demo.py")
         if c3.button("Methods", use_container_width=True):
-            st.switch_page("methods.py")
+            st.switch_page("pages/methods.py")
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
