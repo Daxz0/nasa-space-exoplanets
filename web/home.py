@@ -7,7 +7,8 @@ st.set_page_config(page_title="ExoVet", page_icon="🪐", layout="wide", initial
 # Hide default Streamlit header/footer/hamburger
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bitcount+Prop+Double+Ink&display=swap');
+/* Import real Google Fonts (no local files) */
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400..900&family=Space+Grotesk:wght@400..700&display=swap');
 /* Hide Streamlit chrome */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
@@ -44,8 +45,8 @@ section[aria-label^="Pages"]{ display: none !important; }
     transform: translateY(4px);    /* nudge slightly down without affecting other layout */
 }
 .brand-name{
-    font-family: 'Bitcount Prop Double Ink', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    font-weight:900;
+    font-family: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    font-weight:700;
     font-size:1.8rem;              /* bigger brand text */
     letter-spacing:.2px;
     line-height:1;
@@ -68,11 +69,28 @@ section[aria-label^="Pages"]{ display: none !important; }
   border-radius:10px;
   font-weight:600;
 }
+            
 .nav .stButton>button:hover{ background:rgba(127,127,127,.12); }
 .nav .stButton>button:focus{ outline:2px solid rgba(99,102,241,.45); }
 
+            
 /* Content width */
 .main-wrap{ max-width:1200px; margin:0 auto; }
+
+/* ===== Code font: Bitcount applied to code/pre blocks and inline code ===== */
+/* Use a real Google monospace font; fall back to common monospace */
+.bitcount-code,
+[data-testid="stCodeBlock"],
+[data-testid="stCodeBlock"] code,
+.stMarkdown pre code,
+.stMarkdown code,
+pre,
+code {
+    font-family: 'Azeret Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace !important;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 700; /* heavier code for visual punch; adjust as needed */
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -115,7 +133,7 @@ with st.container():
         st.markdown('<div class="nav">', unsafe_allow_html=True)
         nav_cols = st.columns(4, vertical_alignment="center")
         # display_label may differ from internal page id; keep page ids the same so router works
-        nav_items = [("Home", "Home"), ("Education", "Education"), ("Demo", "Demo"), ("Results", "Results")]
+        nav_items = [("Home", "Home"), ("Education", "Education"), ("Play", "Play"), ("Results", "Results")]
         for i, (page_id, display_label) in enumerate(nav_items):
             if nav_cols[i].button(display_label, use_container_width=True, key=f"nav_{page_id}"):
                 st.session_state.page = page_id
@@ -130,25 +148,6 @@ def page_home():
     st.markdown('<div class="hero">A World Away: Hunting for Exoplanets with AI</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub">Learn the transit method, see how our AI vets signals, then race it in a fast classification game.</div>', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown("### Quick Links")
-    # Use equal-width columns and full-width buttons so modules look balanced
-    q1, q2, q3 = st.columns([1, 1, 1], gap="large")
-    with q1:
-        st.markdown("<div style='padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.06);'>", unsafe_allow_html=True)
-        if st.button("📘 Education", key="home_education"):
-            goto("Education")
-        st.markdown("</div>", unsafe_allow_html=True)
-    with q2:
-        st.markdown("<div style='padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.06);'>", unsafe_allow_html=True)
-        if st.button("🎮 Play", key="home_play"):
-            goto("Play")
-        st.markdown("</div>", unsafe_allow_html=True)
-    with q3:
-        st.markdown("<div style='padding:10px; border-radius:8px; border:1px solid rgba(0,0,0,0.06);'>", unsafe_allow_html=True)
-        if st.button("📊 Results", key="home_results"):
-            goto("Results")
-        st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("#### What’s inside")
