@@ -102,10 +102,20 @@ def load_model():
     """
     Load the trained Random Forest model.
     """
-    # Correctly locate the model file relative to the current script
-    model_path = "random_forest_model.joblib"
-    model = joblib.load("random_forest_model.joblib")
-    return model
+    # Try common locations relative to this file and the repo root
+    here = Path(__file__).parent
+    repo_root = here.parents[2] if len(here.parents) >= 2 else Path.cwd()
+    candidates = [
+        here / 'random_forest_model.joblib',
+        here.parent / 'pages' / 'random_forest_model.joblib',
+        repo_root / 'web' / 'pages' / 'random_forest_model.joblib',
+        repo_root / 'src' / 'models' / 'trained_models' / 'random_forest_model.joblib',
+    ]
+    for p in candidates:
+        if p.exists():
+            return joblib.load(p)
+    st.error("Couldn't find random_forest_model.joblib. Tried: " + ", ".join(str(p) for p in candidates))
+    raise FileNotFoundError("random_forest_model.joblib not found in expected locations")
 
 def predict_planet(model, planet_data):
     # Model trained on 5 features in this exact order:
