@@ -9,8 +9,6 @@ from sklearn.metrics import classification_report, accuracy_score
 
 
 def get_project_paths():
-	"""Resolve project root and important file paths robustly regardless of CWD."""
-	# This file lives at src/models/training/gradient_boosted_trees.py
 	training_dir = os.path.dirname(os.path.abspath(__file__))
 	src_dir = os.path.dirname(os.path.dirname(training_dir))
 	project_root = os.path.dirname(src_dir)
@@ -24,7 +22,6 @@ def get_project_paths():
 def load_data(dataset_path: str):
 	df = pd.read_csv(dataset_path, comment='#')
 
-	# Keep a compact, high-signal set of features used elsewhere in the repo
 	feature_cols = [
 		'koi_period',
 		'koi_duration',
@@ -36,7 +33,6 @@ def load_data(dataset_path: str):
 	X = df[feature_cols]
 	y = df['koi_pdisposition']
 
-	# Basic numeric cleanup
 	X = X.apply(pd.to_numeric, errors='coerce')
 	X = X.fillna(X.mean(numeric_only=True))
 	return X, y, feature_cols
@@ -63,7 +59,6 @@ def train_and_evaluate(X, y):
 	print(f"Accuracy: {acc:.4f}")
 	print("\nClassification report:\n", classification_report(y_test, y_pred))
 
-	# Confusion matrix
 	unique_labels = y_test.unique()
 	cnf_matrix = confusion_matrix(y_test, y_pred, labels=unique_labels)
 	disp = ConfusionMatrixDisplay(confusion_matrix=cnf_matrix, display_labels=unique_labels)
@@ -81,25 +76,13 @@ def show_feature_importance(model, feature_names):
 		print("\nFeature Importance:")
 		print(fi_sorted)
 
-		# Optional: quick bar plot
-		try:
-			fi_sorted.plot(kind='barh', x='Feature', y='Importance', legend=False, figsize=(8, 5))
-			plt.tight_layout()
-			plt.title('Feature Importance (GBTs)')
-		except Exception:
-			pass
-
-
 def main():
 	dataset_path, model_path = get_project_paths()
-	print(f"Using dataset: {dataset_path}")
-	print(f"Model will be saved to: {model_path}")
 
 	X, y, feature_names = load_data(dataset_path)
 	model, acc, _ = train_and_evaluate(X, y)
 	show_feature_importance(model, feature_names)
 
-	# Persist trained model
 	joblib.dump(model, model_path)
 	print(f"\nSaved Gradient Boosted Trees model to: {model_path}")
 

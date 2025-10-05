@@ -5,9 +5,10 @@ from sklearn.metrics import accuracy_score, ConfusionMatrixDisplay, confusion_ma
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score
 import matplotlib.pyplot as plt
+from pathlib import Path
+import joblib
 
-dataset_path = r"C:\Users\jchen\Downloads\nasa-space-exoplanets\src\data\keplar.csv"
-df = pd.read_csv(dataset_path, comment='#')
+df = pd.read_csv('src/data/keplar.csv', comment='#')
 
 X = df[['koi_prad','koi_dicco_msky','koi_dikco_msky','koi_dor','koi_prad_err2','koi_period','koi_duration','koi_depth']]
 
@@ -41,5 +42,15 @@ print("\nFeature Importance:")
 print(feature_importance.sort_values(by='Importance', ascending=False))
 
 
+
+out_dir = Path(__file__).resolve().parent.parent / 'trained_models'
+out_dir.mkdir(parents=True, exist_ok=True)
+
+model_path = out_dir / 'random_forest_model.joblib'
+joblib.dump(rf_model, model_path)
+
+fi_sorted = feature_importance.sort_values(by='Importance', ascending=False)
+
+print(f"\nSaved model to: {model_path}")
 
 plt.show()
