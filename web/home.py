@@ -89,7 +89,13 @@ section[aria-label^="Pages"] { display: none !important; }
 
 /* ===== HERO (big center section) ===== */
 .hero-wrap{
-  padding: 6rem 0 3rem 0;
+  /* fill most of the viewport and center contents */
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 4rem 0;
   text-align: center;
   background: linear-gradient(180deg, rgba(255,246,226,0.0) 0%, rgba(255,246,226,0.10) 100%);
 }
