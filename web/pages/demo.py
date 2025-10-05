@@ -167,9 +167,9 @@ with st.container():
         if c1.button("Home", use_container_width=True):
             st.switch_page("home.py")
         if c2.button("Education", use_container_width=True):
-            st.switch_page("education.py")
+            st.switch_page("pages/education.py")
         if c3.button("Methods", use_container_width=True):
-            st.switch_page("methods.py")
+            st.switch_page("pages/methods.py")
         st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -186,7 +186,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-model = joblib.load('../../random_forest_model.joblib')
+model = joblib.load('random_forest_model.joblib')
 
 
 input_cols = st.columns(5)
