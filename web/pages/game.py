@@ -151,7 +151,7 @@ def load_model():
     """
     # Correctly locate the model file relative to the current script
     model_path = "random_forest_model.joblib"
-    model = joblib.load(model_path)
+    model = joblib.load("random_forest_model.joblib")
     return model
 
 def predict_planet(model, planet_data):
