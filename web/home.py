@@ -224,7 +224,7 @@ st.markdown("""
 <div class="video-section">
   <div class="video-background"></div>
   <div class="video-container">
-    <iframe src="https://youtu.be/506-EpLlBrI" 
+    <iframe src="https://www.youtube.com/embed/506-EpLlBrI?si=iMMGdZVqytWoMudD" 
             title="Demo Video" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen></iframe>
