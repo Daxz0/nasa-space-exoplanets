@@ -159,19 +159,19 @@ with st.container():
 
     with left:
         if st.button("Exoura", key="brand_home", help="Go to home"):
-            st.switch_page("../home.py")
+            st.switch_page("home.py")
 
     with right:
         st.markdown('<div class="nav">', unsafe_allow_html=True)
         c1, c2, c3, c4 = st.columns(4)
         if c1.button("Home", use_container_width=True):
-            st.switch_page("pages/home.py")
+            st.switch_page("home.py")
         if c2.button("Education", use_container_width=True):
-            st.switch_page("pages/education.py")
+            st.switch_page("education.py")
         if c3.button("Demo", use_container_width=True):
-            st.switch_page("pages/demo.py")
+            st.rerun()
         if c4.button("Results", use_container_width=True):
-            st.switch_page("pages/results.py")
+            st.switch_page("results.py")
         st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
