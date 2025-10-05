@@ -109,7 +109,6 @@ st.markdown("""
 # Load the pre-trained model
 model = joblib.load('random_forest_model.joblib')
 
-
 # --- Feature Input Card ---
 
 # --- Feature Input Layout: Responsive 5 columns, always centered ---
