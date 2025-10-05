@@ -101,15 +101,9 @@ with st.container():
             except Exception:
                 st.experimental_rerun()
         if c2.button("Demo", use_container_width=True):
-            try:
-                st.switch_page("pages/demo.py")
-            except Exception:
-                st.experimental_rerun()
-        if c3.button("Results", use_container_width=True):
-            try:
-                st.switch_page("pages/results.py")
-            except Exception:
-                st.experimental_rerun()
+            st.switch_page("pages/demo.py")
+        if c3.button("Methods", use_container_width=True):
+            st.switch_page("pages/methods.py")
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
