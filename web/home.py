@@ -300,7 +300,7 @@ st.markdown("""
   background: linear-gradient(90deg, #7aa2ff, #a78bfa);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.about-text { font-size: 1.06rem; line-height: 1.9; opacity: .95; padding: 0.6rem 0; }
+.about-text { font-size: 1.06rem; line-height: 1.9; opacity: .95; padding: 0.6rem 0; margin-bottom: 20px}
 .about-text p { margin-bottom: 0.9rem; }
 .about-caption { font-size: .9rem; opacity: .75; margin-top: .6rem; }
 .team-img { border-radius: 10px; width: 100%; display: block; }
@@ -362,7 +362,7 @@ with st.container():
       "<div style='display:none'></div>"  # grid placeholder for consistent padding on small screens
       "<div class='about-text'>"
       "At <strong>Team Exoura</strong>, we’re a group of high school students focused on STEM, "
-      "including Computer Science and Mechanical Engineering. Our skills span graphic design, "
+      "including Computer Science and Mechanical Engineering. Our skills span from graphic design, "
       "astrophysics, and coding (from C++ to Python). With our background in machine learning, "
       "we’re combining astronomy and AI to build a seamless, interactive interface for exploring exoplanets."
       "<p class='about-caption' style='margin-top: 0.8rem;'>"
