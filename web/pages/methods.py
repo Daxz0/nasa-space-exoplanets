@@ -142,7 +142,6 @@ st.markdown("""
 - **Transit Duration**: Duration of the transit event in hours  
 - **Transit Depth**: Depth of the transit in parts per million (ppm)
 - **Planet Radius**: Radius of the planet in Earth radii
-- **Signal-to-Noise Ratio**: Quality metric of the detection signal
 """)
 
 st.markdown("### Model Performance")
