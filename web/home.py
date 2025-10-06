@@ -300,13 +300,13 @@ st.markdown("""
   background: linear-gradient(90deg, #7aa2ff, #a78bfa);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.about-text { font-size: 1.06rem; line-height: 1.9; opacity: .95; padding: 0.6rem 0; margin-bottom: 20px}
+.about-text { font-size: 1.06rem; line-height: 1.9; opacity: .95; padding: 0.6rem 0; margin-top:20px; margin-bottom: 20px;}
 .about-text p { margin-bottom: 0.9rem; }
 .about-caption { font-size: .9rem; opacity: .75; margin-top: .6rem; }
 .team-img { border-radius: 10px; width: 100%; display: block; }
 /* Thin gradient frame around team photo */
 .team-frame {
-  display: block; width: 100%; border-radius: 14px; padding: 4px; box-sizing: border-box;
+  display: block; width: 100%; border-radius: 14px; padding: 4px; box-sizing: border-box; margin-bottom: 50px;
   background: linear-gradient(90deg, rgba(45,212,191,0.95), rgba(56,189,248,0.9));
 }
 .team-frame .team-img { border-radius: 10px; display: block; width: 100%; }
@@ -401,7 +401,7 @@ st.markdown(
   border: 1px solid rgba(255,255,255,0.10);
 }
 .github-logo svg { width: 26px; height: 26px; fill: #ffffff; opacity: 0.95; }
-.github-text { display: flex; flex-direction: column; gap: 2px; color: #e5e7eb; margin-top: 50px; }
+.github-text { display: flex; flex-direction: column; gap: 2px; color: #e5e7eb; margin-top: 10px; }
 .github-text .title {
   font-family: 'Urbanist', sans-serif; font-weight: 800; letter-spacing: -0.01em;
   background: linear-gradient(90deg, #7aa2ff, #a78bfa);
